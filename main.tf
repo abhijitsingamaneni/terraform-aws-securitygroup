@@ -54,7 +54,7 @@ resource "aws_security_group" "db" {
   vpc_id      = var.vpc_id
 
   ingress {
-    protocol        = "-1"
+    protocol        = "tcp"
     from_port       = 3306
     to_port         = 3306
     security_groups = [aws_security_group.ecs_tasks.id]
