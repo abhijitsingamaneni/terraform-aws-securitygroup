@@ -2,7 +2,7 @@
 
 # ALB security group 
 resource "aws_security_group" "lb" {
-  name        = "${var.env}-load-balancer-security-group-${var.vpc_name}"
+  name        = "lb-sg-curai-${var.env}-${var.application}"
   description = "controls access to the ALB"
   vpc_id      = var.vpc_id
 
@@ -25,11 +25,15 @@ resource "aws_security_group" "lb" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "lb-sg-curai-${var.env}-${var.application}"
+  }
 }
 
 # Traffic to the ECS cluster should only come from the ALB
 resource "aws_security_group" "ecs_tasks" {
-  name        = "${var.env}-ecs-tasks-security-group-${var.vpc_name}"
+  name        = "ecs-sg-curai-${var.env}-${var.application}"
   description = "allow inbound access from the ALB only"
   vpc_id      = var.vpc_id
 
@@ -46,17 +50,21 @@ resource "aws_security_group" "ecs_tasks" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "ecs-sg-curai-${var.env}-${var.application}"
+  }
 }
 
 resource "aws_security_group" "db" {
-  name        = "${var.env}-db-security-group-${var.vpc_name}"
+  name        = "db-sg-curai-${var.env}-${var.application}"
   description = "allow inbound access to database"
   vpc_id      = var.vpc_id
 
   ingress {
     protocol        = "tcp"
-    from_port       = 3306
-    to_port         = 3306
+    from_port       = 5432
+    to_port         = 5432
     security_groups = [aws_security_group.ecs_tasks.id]
   }
 
@@ -65,5 +73,9 @@ resource "aws_security_group" "db" {
     from_port   = 0
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "db-sg-curai-${var.env}-${var.application}"
   }
 }
