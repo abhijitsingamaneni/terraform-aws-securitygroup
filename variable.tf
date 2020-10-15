@@ -7,3 +7,6 @@ variable "env" {
 variable "vpc_name" {
     description = "what is the name of the VPC"
 }
+variable "application" {
+    
+}
