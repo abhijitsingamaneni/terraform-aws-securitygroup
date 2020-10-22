@@ -2,7 +2,7 @@
 
 # ALB security group 
 resource "aws_security_group" "lb" {
-  name        = "lb-sg-curai-${var.env}-${var.application}"
+  name        = "sg-curai-web-${var.env}"
   description = "controls access to the ALB"
   vpc_id      = var.vpc_id
 
@@ -27,13 +27,13 @@ resource "aws_security_group" "lb" {
   }
 
   tags = {
-    Name = "lb-sg-curai-${var.env}-${var.application}"
+    Name = "sg-curai-web-${var.env}"
   }
 }
 
 # Traffic to the ECS cluster should only come from the ALB
 resource "aws_security_group" "ecs_tasks" {
-  name        = "ecs-sg-curai-${var.env}-${var.application}"
+  name        = "sg-curai-backend-${var.env}"
   description = "allow inbound access from the ALB only"
   vpc_id      = var.vpc_id
 
@@ -52,12 +52,12 @@ resource "aws_security_group" "ecs_tasks" {
   }
 
   tags = {
-    Name = "ecs-sg-curai-${var.env}-${var.application}"
+    Name = "sg-curai-backend-${var.env}"
   }
 }
 
 resource "aws_security_group" "db" {
-  name        = "db-sg-curai-${var.env}-${var.application}"
+  name        = "sg-curai-db-${var.env}"
   description = "allow inbound access to database"
   vpc_id      = var.vpc_id
 
@@ -76,6 +76,6 @@ resource "aws_security_group" "db" {
   }
 
   tags = {
-    Name = "db-sg-curai-${var.env}-${var.application}"
+    Name = "sg-curai-db-${var.env}"
   }
 }
